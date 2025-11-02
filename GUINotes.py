@@ -1,58 +1,52 @@
-import tkinter
-from tkinter import *
+import tkinter as tk
 from tkinter import ttk
 
-# widgets = GUI elements : buttons, textboxes, labels, images
-# windows = serves as a container to hold or contain these widgets
-
-#window properties
-window = Tk() # instantiate an instance of a window
-window.geometry("500x500") # Change size
+# window properties
+window = tk.Tk()
+window.geometry("700x700")
 window.title("Hello World!")
 window.config(background="gray")
 
-#icon
-icon = PhotoImage(file="ChudJack.png")
+# icon
+icon = tk.PhotoImage(file="DLPGUI/ChudJackSmall.png")
 window.iconphoto(True, icon)
 
-#frame padding
-frame = ttk.Frame(padding=100)
+# frame padding
+frame = ttk.Frame(window, padding=100)
 frame.grid()
 
-#how to do text
-ttk.Label(frame, text="Hello World!").grid(column=0,row=0)
+#image
+image = tk.PhotoImage(file="DLPGUI/ChudJackSmall.png")
+image_label = tk.Label(frame, image=image).grid(column=1, row=0)
 
-#Normal Button
-ttk.Button(frame, text="Quit", command=window.destroy).grid(column=0, row=1)
+# Label
+ttk.Label(frame, text="Billions Must die").grid(column=0, row=0)
 
-#Checkbox
-Checkbutton(frame, text ='Hello?').grid(column=0, row=2)
+# Normal Button
+ttk.Button(frame, text="Truth nuke", command=window.destroy).grid(column=0, row=1)
 
-#OptionMenu
-options = ['option1', 'option2']
-value_inside = tkinter.StringVar(window)
-OptionMenu(frame, value_inside, *options).grid(column=0, row=3)
+# Checkbox
+tk.Checkbutton(frame, text='Billions').grid(column=0, row=2)
 
-#EnterText
+# OptionMenu
+options = ['millions', 'billions']
+value_inside = tk.StringVar(window)
+tk.OptionMenu(frame, value_inside, *options).grid(column=0, row=3)
 
-#declare variable
-input_var = tkinter.StringVar()
+# Declare variable
+input_var = tk.StringVar()
 
-#define function that will be a command later
+# Define function
 def submit():
     user_input = input_var.get()
-
     print(user_input)
     input_var.set("")
 
-#enter text here
-user_entry = Entry(frame, textvariable= input_var).grid(column=0, row=4)
+# Entry (text field)
+tk.Entry(frame, textvariable=input_var).grid(column=0, row=4)
 
-#command setter button
-submit_btn = ttk.Button(frame,text = 'submit ^', command = submit).grid(column=2,row=4)
+# Command button
+ttk.Button(frame, text='submit', command=submit).grid(column=1, row=4)
 
-
-#how to look at all the commands for something, make sure to put .configure()
-#print(ttk.Button().configure())
-window.mainloop() # place window on screen, listen for events
-
+# Run window
+window.mainloop()
