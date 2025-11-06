@@ -10,13 +10,27 @@ window.resizable(width=False, height=False)
 window.title("ChudJack.exe")
 window.config(background="gray")
 
-#icon
-icon = tk.PhotoImage(file="DLPGUI/ChudJackSmall.png")
-window.iconphoto(True, icon)
-
 # frame padding
 frame = ttk.Frame(window, padding=100)
 frame.grid()
+
+###################### WIDGETS #######################
+
+#icon
+
+image_path = "DLPGUI\ChudJackSmall.png"
+image_path2 = "ChudJackSmall.png"
+
+if os.path.exists(image_path):
+    icon = tk.PhotoImage(file=image_path)
+    window.iconphoto(True, icon)
+elif os.path.exists(image_path2):
+    icon = tk.PhotoImage(file=image_path2)
+    window.iconphoto(True, icon)
+else:
+    pass
+
+
 
 # Normal Button TRUTH NUKE
 def truthNuke():
@@ -33,9 +47,11 @@ def submit():
     #input_var.set("")
 
 #image
-image_path = "DLPGUI\ChudJackSmall.png"
 if os.path.exists(image_path):
     image = tk.PhotoImage(file=image_path)
+    image_label = tk.Label(frame, image=image).grid(column=1, row=0)
+elif os.path.exists(image_path2):
+    image = tk.PhotoImage(file=image_path2)
     image_label = tk.Label(frame, image=image).grid(column=1, row=0)
 else:
     print("Image failed to load:")
