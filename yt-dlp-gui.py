@@ -19,17 +19,27 @@ from tkinter import ttk
 import tkinter.messagebox
 
 def submit_url():
-
+    command = create_command()
     url = wv_input_var.get()
     if not url:
-        tkinter.messagebox.showerror("Error", "Enter a valid URL!")
+        wv_message.set("No URL Entered")
         return
 
     # calls and sets the msg in one line
-    wv_message.set(subprocess.getoutput(["DLPGUI\yt-dlp.exe", url]))
+    wv_message.set(subprocess.getoutput([command, url]))
+
+def create_command():
+    command = "ytp-dlp.exe"
+
+    if wv_ftOption != "Select a file type":
+        command = command + " -t " + wv_ftOption.get()
+
+    print(command)
+    return command
+
 
 def create_widgets(window):
-    global wv_input_var, wv_message
+    global wv_message, wv_input_var, wv_ftOption, wv_qualOption, wv_subtitles
 
     # top message
     wv_message = tk.StringVar(value="Welcome")
@@ -45,14 +55,14 @@ def create_widgets(window):
 
     # Dropdown for file Type
     fileTypes = ["Select a file type","MP4", "MP3"]
-    wv_ftoption = tk.StringVar(value="Select a file type")
-    btn_fileType = tk.OptionMenu(window, wv_ftoption, *fileTypes)
+    wv_ftOption = tk.StringVar(value="Select a file type")
+    btn_fileType = tk.OptionMenu(window, wv_ftOption, *fileTypes)
     btn_fileType.pack(pady=5)
 
     # Dropdown for video quality
     quality = ["Select video quality","Best", "Worst"]
-    wv_option = tk.StringVar(value="Select video quality")
-    btn_fileType = tk.OptionMenu(window, wv_option, *quality)
+    wv_qualOption = tk.StringVar(value="Select video quality")
+    btn_fileType = tk.OptionMenu(window, wv_qualOption, *quality)
     btn_fileType.pack(pady=5)
 
     # checkbox for subtitles
@@ -71,6 +81,7 @@ def main():
     window.config(background="gray")
 
     create_widgets(window)
+    create_command()
 
     window.mainloop()
 
