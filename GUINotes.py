@@ -2,6 +2,10 @@ import tkinter as tk
 from tkinter import ttk
 import tkinter.messagebox
 import os
+import subprocess # used for cmd commands in py
+
+# FOR INSTALLING FFMPEG
+# winget install "FFmpeg (Essentials Build)"
 
 # window properties
 window = tk.Tk()
