@@ -1,8 +1,6 @@
 
 ####################################################
-# TODO: # Add functionality for subtitles
-#       # Add functionality for vid quality
-#       # Add functionality for MP4 / MP3 / other
+# TODO: # add different languages for subtitles
 #       # Download bar but actually working, i think the gui and backend have to be seperate threads
 #       # Custom file path download with a browse
 #
@@ -11,6 +9,9 @@
 #       # Multi threaded?
 #       # Learn more about yt-dlp downloader for more funcitonality
 ####################################################
+
+#Commands for later
+# --console-title  Display progress in console titlebar
 
 import os
 import subprocess # used for cmd commands in py
@@ -25,14 +26,27 @@ def submit_url():
         wv_message.set("No URL Entered")
         return
 
-    # calls and sets the msg in one line
-    wv_message.set(subprocess.getoutput([command, url]))
+    # calls and sets the msg 
+    result = subprocess.getoutput(command +" "+ url)
+    wv_message.set(result)
 
+
+# submit url helper
 def create_command():
-    command = "ytp-dlp.exe"
+    command = "yt-dlp.exe"
 
-    if wv_ftOption != "Select a file type":
-        command = command + " -t " + wv_ftOption.get()
+    # file type
+    if wv_ftOption.get() != "Select a file type":
+        command += " -t " + wv_ftOption.get().lower()
+
+    # quality
+    if wv_qualOption.get() != "Select video quality":
+        command += f' -S "res:{wv_qualOption.get()}"'
+
+    # Subtitles
+    if wv_subtitles.get():
+        command += " --write-subs --sub-lang en"
+
 
     print(command)
     return command
@@ -60,7 +74,7 @@ def create_widgets(window):
     btn_fileType.pack(pady=5)
 
     # Dropdown for video quality
-    quality = ["Select video quality","Best", "Worst"]
+    quality = ["Select video quality","2160","1440","1920", "720", "480"]
     wv_qualOption = tk.StringVar(value="Select video quality")
     btn_fileType = tk.OptionMenu(window, wv_qualOption, *quality)
     btn_fileType.pack(pady=5)
@@ -73,6 +87,10 @@ def create_widgets(window):
 
 
 def main():
+    os.chdir(os.path.dirname(os.path.abspath(__file__)))
+    print("WORKING DIR:", os.getcwd())
+
+
     #create window
     window = tk.Tk()
     window.geometry("400x400")
@@ -81,7 +99,6 @@ def main():
     window.config(background="gray")
 
     create_widgets(window)
-    create_command()
 
     window.mainloop()
 
