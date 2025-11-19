@@ -12,26 +12,33 @@
 
 #Commands for later
 # --console-title  Display progress in console titlebar
+# # winget install "FFmpeg (Essentials Build)"
 
 import os
 import subprocess # used for cmd commands in py
+from threading import *
 import tkinter as tk
 from tkinter import ttk
-import tkinter.messagebox
+
 
 def submit_url():
     command = create_command()
 
     if command:
         # calls and sets the msg 
+        wv_message.set("Downloading . . .")
         result = subprocess.getoutput(command)
         wv_message.set(result)
+        print(result)
 
     wv_input_var.set("")
-        
 
+# submit url helper 1
+def submit_url_threading():
+    t1 = Thread(target = submit_url)
+    t1.start()
 
-# submit url helper
+# submit url helper 2
 def create_command():
     command = "yt-dlp.exe"
     
@@ -57,15 +64,15 @@ def create_command():
 
     # Subtitles
     if wv_subtitles.get():
-        command += " --write-subs --sub-lang en"
+        command += " --write-subs --sub-lang en "
 
-    command += " "+url
+    command += " " + url
     print(command)
     return command
 
 
 def create_widgets(window):
-    global wv_message, wv_input_var, wv_ftOption, wv_qualOption, wv_subtitles, btn_urlEnter
+    global wv_message, wv_input_var, wv_ftOption, wv_qualOption, wv_subtitles
 
     # top message
     wv_message = tk.StringVar(value="Welcome")
@@ -76,7 +83,7 @@ def create_widgets(window):
     label_URL = tk.Label(window, text="URL:")
     wv_input_var = tk.StringVar()
     btn_urlEnter = tk.Entry(window, textvariable=wv_input_var, borderwidth=2, width= 85)
-    btn_urlSubmit = ttk.Button(window, text="Submit", command=submit_url)
+    btn_urlSubmit = ttk.Button(window, text="Submit", command=submit_url_threading)
     
     # Dropdown for file Type
     fileTypes = ["Select a file type","MP4", "MP3"]
