@@ -34,10 +34,18 @@ def submit_url():
 
     wv_input_var.set("")
 
+# gives user a update on the download
+def update_submit_msg():
+    print("Hello")
+
+
 # submit url helper 1
 def submit_url_threading():
     t1 = Thread(target = submit_url)
+    t2 = Thread(target = update_submit_msg)
     t1.start()
+    t2.start()
+
 
 # submit url helper 2
 def create_command():
@@ -109,21 +117,22 @@ def create_widgets(window):
     btn_urlEnter.pack(anchor="sw", side="left", padx=5, pady=5)
     btn_urlSubmit.pack(anchor = "sw", side = "right", padx=5, pady=5, fill="x")
 
+
 def verify_dependencies(window):
     #FFMPEG
     try:
         result = subprocess.run(['ffmpeg', '-version'], capture_output=True, text=True, check=True)
         print("FFmpeg is installed and accessible.")
     except FileNotFoundError | subprocess.CalledProcessError:
-        print("FFmpeg is not installed or not in the PATH.")
+        print("ERROR: FFmpeg is not installed or not in the PATH.")
         messagebox.showerror("FFmpeg is not installed, not in the PATH or corrupt.",
         "\nPlease run \" winget install \"FFmpeg (Essentials Build)\" \" in cmd " \
         " this program will not act properly without it")
+        window.destroy()
     
     #yt-dlp.exe
     ytdlp = os.path.exists(os.getcwd() + "\yt-dlp.exe")
-
-    
+  
     if ytdlp:
         print("yt-dlp.exe found")
     else:
@@ -131,9 +140,7 @@ def verify_dependencies(window):
         messagebox.showerror("yt-dlp.exe is not found in the main file", 
                              "yt-dlp.exe is not found in the main file\n please reinstall from github")
         window.destroy()
-        
-        
-        
+       
 
 def main():
     os.chdir(os.path.dirname(os.path.abspath(__file__)))
