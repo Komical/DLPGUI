@@ -26,10 +26,24 @@ def submit_url():
     result = "Starting..."
 
     command = create_command()
+
+    # Check for user error
+    if  not wv_input_var.get():
+        result = "No URL Input"
+        submit_running = False
+        return
+    elif wv_ftOption.get() == "Select a file type":
+        result = "No file type selected"
+        submit_running = False
+        return
+    elif wv_qualOption.get() == "Select video quality":
+        result = "No video quality selected"
+        submit_running = False
+        return
     if not command:
         submit_running = False
         return
-
+    
     # Start the process
     process = subprocess.Popen(
         command,
@@ -43,8 +57,14 @@ def submit_url():
     for line in process.stdout:
         result = line.strip()
 
-    process.wait()
     submit_running = False
+
+    return_code = process.wait()
+
+    if return_code == 0: 
+        result = "SUCCESS"
+    else:
+        result = return_code
 
 # gives user a update on the download
 def update_submit_msg():
@@ -52,7 +72,12 @@ def update_submit_msg():
         wv_message.set(result)
         window.after(500, update_submit_msg)
     else:
-        wv_message.set("Download Complete.")
+        if result == "SUCCESS":
+            wv_message.set("Download Complete.")
+        elif result == 1:
+            pass
+        else:
+            wv_message.set(f"ERROR {result}")
         
 
 
@@ -68,24 +93,25 @@ def submit_url_threading():
 def create_command():
     command = "yt-dlp.exe"
     
-    #URL
-    url = wv_input_var.get()
+    url = wv_input_var.get()    #URL
+    fmt = wv_ftOption.get()     #FORMAT
+    qual = wv_qualOption.get()  #VID QUAL
+
     if not url:
-        wv_message.set("No URL Entered")
         return
     
     # file type
-    if wv_ftOption.get() != "Select a file type":
-        command += " -t " + wv_ftOption.get().lower()
+    if fmt != "Select a file type":
+        command += " -t " + fmt.lower()
     else:
-        wv_message.set("No file type selected")
         return
 
     # quality
-    if wv_qualOption.get() != "Select video quality":
-        command += f' -S "res:{wv_qualOption.get()}"'
+    if fmt == "MP3":
+        pass
+    elif qual != "Select video quality":
+        command += f' -S "res:{qual}"'
     else:
-        wv_message.set("No Quality selected")
         return
 
     # Subtitles
