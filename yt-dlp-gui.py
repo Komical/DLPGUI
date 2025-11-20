@@ -17,34 +17,54 @@
 import os
 import subprocess # used for cmd commands in py
 from threading import *
+import time
 import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
 
 
 def submit_url():
+    global submit_running, result
+    submit_running = True
+    result = "Starting..."
+
     command = create_command()
+    if not command:
+        submit_running = False
+        return
 
-    if command:
-        # calls and sets the msg 
-        wv_message.set("Downloading . . .")
-        result = subprocess.getoutput(command)
-        wv_message.set(result)
-        print(result)
+    # Start the process
+    process = subprocess.Popen(
+        command,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        text=True,
+        shell=True
+    )
 
-    wv_input_var.set("")
+    # Stream output
+    for line in process.stdout:
+        result = line.strip()
+
+    process.wait()
+    submit_running = False
 
 # gives user a update on the download
 def update_submit_msg():
-    print("Hello")
+    if submit_running:
+        wv_message.set(result)
+        window.after(500, update_submit_msg)
+    else:
+        wv_message.set("Download Complete.")
+        
 
 
 # submit url helper 1
 def submit_url_threading():
     t1 = Thread(target = submit_url)
-    t2 = Thread(target = update_submit_msg)
     t1.start()
-    t2.start()
+    update_submit_msg()
+
 
 
 # submit url helper 2
@@ -80,7 +100,7 @@ def create_command():
     return command
 
 
-def create_widgets(window):
+def create_widgets():
     global wv_message, wv_input_var, wv_ftOption, wv_qualOption, wv_subtitles
 
     # top message
@@ -118,7 +138,7 @@ def create_widgets(window):
     btn_urlSubmit.pack(anchor = "sw", side = "right", padx=5, pady=5, fill="x")
 
 
-def verify_dependencies(window):
+def verify_dependencies():
     #FFMPEG
     try:
         result = subprocess.run(['ffmpeg', '-version'], capture_output=True, text=True, check=True)
@@ -143,9 +163,10 @@ def verify_dependencies(window):
        
 
 def main():
+    global window
+
     os.chdir(os.path.dirname(os.path.abspath(__file__)))
     print("WORKING DIR:", os.getcwd())
-
 
     #create window
     window = tk.Tk()
@@ -154,9 +175,9 @@ def main():
     window.title("YT-dlp-gui")
     window.config(background="gray")
 
-    verify_dependencies(window)
+    verify_dependencies()
 
-    create_widgets(window)
+    create_widgets()
 
     window.mainloop()
 
