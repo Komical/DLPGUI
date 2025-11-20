@@ -1,12 +1,9 @@
 
 ####################################################
 # TODO: # add different languages for subtitles
-#       # Download bar but actually working, i think the gui and backend have to be seperate threads
 #       # Custom file path download with a browse
 #
-#       # if no FFMPEG downloaded, prompt user if they want to download
 #       # Multi download?
-#       # Multi threaded?
 #       # Learn more about yt-dlp downloader for more funcitonality
 ####################################################
 
