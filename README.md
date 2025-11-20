@@ -5,7 +5,7 @@ This Program Can:
 - english subtitles
 
 you will need: 
-- yt-dlp-gui included 
+- yt-dlp.exe (included) 
 - python installed to use the GUI
 - FFMPEG installed
 
@@ -17,4 +17,4 @@ TO INSTALL PYTHON:
     - https://www.python.org/
 - IMPORTANT: make sure you click add to PATH!
 
-THIS PROJECT IS JUST A GUI FOR https://github.com/yt-dlp/yt-dlp PLEASE CHECK THIS OUT FOR MORE FUNCTIONALITY (its included) 
+THIS PROJECT IS JUST A GUI FOR https://github.com/yt-dlp/yt-dlp PLEASE CHECK THIS OUT FOR MORE FUNCTIONALITY (its included)
